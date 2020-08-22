@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
-import com.example.myloginmvvm.model.login.LoginDataSource;
-import com.example.myloginmvvm.model.login.LoginRepository;
+import com.example.myloginmvvm.model.HomeDataSource;
+import com.example.myloginmvvm.model.HomeRepository;
+import com.example.myloginmvvm.model.LoginDataSource;
+import com.example.myloginmvvm.model.LoginRepository;
 import com.example.myloginmvvm.vm.HomeViewModel;
 import com.example.myloginmvvm.vm.LoginViewModel;
 
@@ -19,13 +21,15 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        MyApplication app  = new MyApplication();
         if (modelClass.isAssignableFrom(LoginViewModel.class)) {
-            return (T) new LoginViewModel(LoginRepository.getInstance(LoginDataSource.getSigleInstance()));
+
+            return (T) new LoginViewModel(app,LoginRepository.getInstance(LoginDataSource.getSigleInstance()));
         }
         else if (modelClass.isAssignableFrom(HomeViewModel.class)) {
             //这里也可将LoginDataSource替换为HomeDataSource，同login区分开数据来源，也就是说HomeDataSource
             // 只负责为首页提供数据
-            return (T) new HomeViewModel(LoginRepository.getInstance(new LoginDataSource()));
+            return (T) new HomeViewModel(HomeRepository.getInstance(new HomeDataSource()),app);
         }else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

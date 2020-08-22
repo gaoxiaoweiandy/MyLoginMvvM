@@ -1,66 +1,26 @@
 package com.example.myloginmvvm.vm;
-
-import androidx.lifecycle.LiveData;
+import android.app.Application;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
+import com.example.myloginmvvm.bean.JsonDeviceList;
+import com.example.myloginmvvm.model.HomeRepository;
 
-import android.util.Patterns;
+public class HomeViewModel extends AndroidViewModel {
+    String TAG = "AACHomeViewModel";
+    private MutableLiveData<JsonDeviceList> deviceListLiveData = new MutableLiveData<>();
+    private HomeRepository homeRepository;
 
-import com.example.myloginmvvm.bean.JsonLogin;
-import com.example.myloginmvvm.model.login.LoginRepository;
-import com.example.myloginmvvm.model.bean.LoginFormState;
-import com.example.myloginmvvm.model.bean.LoginResult;
-import com.example.myloginmvvm.R;
-
-public class HomeViewModel extends ViewModel {
-
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
-
-    public HomeViewModel(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+    public HomeViewModel(HomeRepository homeRepository, Application app) {
+        super(app);
+        this.homeRepository = homeRepository;
+    }
+    public MutableLiveData<JsonDeviceList> getDeviceListLiveData() {
+        return deviceListLiveData;
+    }
+    public MutableLiveData<JsonDeviceList>  getMyDeviceList(String username,String token) {
+        MutableLiveData<JsonDeviceList> result = null;
+        result = homeRepository.getMyDeviceList(username,token,deviceListLiveData);
+        return result;
     }
 
-    public LiveData<LoginFormState> getLoginFormState() {
-        return loginFormState;
-    }
-
-    public LiveData<LoginResult> getLoginResult() {
-        return loginResult;
-    }
-
-    public void login(String username, String password) {
-        // can be launched in a separate asynchronous job
-        MutableLiveData<JsonLogin> result = loginRepository.login(username, password,null);
-
-
-    }
-
-    public void loginDataChanged(String username, String password) {
-        if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
-        } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
-        } else {
-            loginFormState.setValue(new LoginFormState(true));
-        }
-    }
-
-    // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        if (username == null) {
-            return false;
-        }
-        if (username.contains("@")) {
-            return Patterns.EMAIL_ADDRESS.matcher(username).matches();
-        } else {
-            return !username.trim().isEmpty();
-        }
-    }
-
-    // A placeholder password validation check
-    private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
-    }
 }

@@ -1,28 +1,35 @@
 package com.example.myloginmvvm.vm;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import android.app.Application;
+import android.content.ContentValues;
+import android.util.Log;
 import android.util.Patterns;
 
+import com.example.myloginmvvm.MyApplication;
 import com.example.myloginmvvm.bean.JsonLogin;
-import com.example.myloginmvvm.model.login.LoginRepository;
-import com.example.myloginmvvm.model.Result;
-import com.example.myloginmvvm.model.bean.LoggedInUserView;
+import com.example.myloginmvvm.bean.User;
+import com.example.myloginmvvm.model.LoginRepository;
 import com.example.myloginmvvm.model.bean.LoginFormState;
 import com.example.myloginmvvm.model.bean.LoginResult;
-import com.example.myloginmvvm.model.bean.LoggedInUser;
 import com.example.myloginmvvm.R;
 
-public class LoginViewModel extends ViewModel {
+public class LoginViewModel extends AndroidViewModel {
 
+    String TAG = "AACLoginViewModel";
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private MutableLiveData<JsonLogin> jsonLoginLiveData = new MutableLiveData<>();
     private LoginRepository loginRepository;
+    private Application mApp;
 
-    public LoginViewModel(LoginRepository loginRepository) {
+    public LoginViewModel(Application app,LoginRepository loginRepository) {
+        super(app);
+        this.mApp = app;
         this.loginRepository = loginRepository;
     }
 
@@ -39,7 +46,8 @@ public class LoginViewModel extends ViewModel {
     }
 
     public LiveData<JsonLogin> login(String username, String password) {
-        jsonLoginLiveData = loginRepository.login(username, password,jsonLoginLiveData);
+        jsonLoginLiveData = loginRepository.login(username, password,jsonLoginLiveData,mApp);
+        Log.i(TAG,"login");
         return jsonLoginLiveData;
     }
 

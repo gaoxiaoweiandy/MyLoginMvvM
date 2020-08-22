@@ -1,5 +1,8 @@
 package com.example.myloginmvvm.net;
+import com.example.myloginmvvm.bean.JsonDeviceList;
 import com.example.myloginmvvm.bean.JsonLogin;
+
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -19,6 +22,10 @@ public interface RetrofitApiService {
                                 @Query("password")String password
     );
 
-
+    @GET("rescue/app/guardian/device")
+    Observable<JsonDeviceList> getMyDeviceList(
+            @Query("userName")String userName,
+            @Header("Authorization")String userToken
+    );
 
 }

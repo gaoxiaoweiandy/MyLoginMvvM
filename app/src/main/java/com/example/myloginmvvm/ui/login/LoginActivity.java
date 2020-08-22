@@ -1,14 +1,13 @@
-package com.example.myloginmvvm.ui.login.login;
-
-import android.app.Activity;
+package com.example.myloginmvvm.ui.login;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
@@ -24,8 +23,9 @@ import android.widget.Toast;
 import com.example.myloginmvvm.R;
 import com.example.myloginmvvm.ViewModelFactory;
 import com.example.myloginmvvm.bean.JsonLogin;
+import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.model.bean.LoginFormState;
-import com.example.myloginmvvm.model.login.LoginDataSource;
+import com.example.myloginmvvm.model.LoginDataSource;
 import com.example.myloginmvvm.vm.LoginViewModel;
 
 
@@ -39,10 +39,25 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getLifecycle().addObserver(LoginDataSource.getSigleInstance());
-        loginViewModel = ViewModelProviders.of(this, new ViewModelFactory()).get(LoginViewModel.class);
         initView();
+        loginViewModel = ViewModelProviders.of(this, new ViewModelFactory()).get(LoginViewModel.class);
+        getLifecycle().addObserver(LoginDataSource.getSigleInstance());
         initLiveDataObersve();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    public void saveUserData(String token)
+    {
+        //保存用户数据在本地SharePreference
+        User user = new User();
+        ContentValues value = new ContentValues();
+        value.put("userToken",token);
+        user.saveUserInfo(this,value);
     }
 
     private void initLiveDataObersve() {
@@ -53,10 +68,15 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.GONE);
                 int status = jsonLogin.getStatus();
                 if (status == 1) {
-                    Toast.makeText(LoginActivity.this, "登录成功"+ jsonLogin.toString(), Toast.LENGTH_LONG).show();
+                    saveUserData(jsonLogin.getData().getToken());
+                    Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                    i.putExtra("userName",jsonLogin.getData().getMobile());
+                    startActivity(i);
+                    Toast.makeText(LoginActivity.this, "登录成功",Toast.LENGTH_SHORT).show();
                 } else {
                     if(status == -1)
                     {
+
                         String msg =  jsonLogin.getThrowable().getMessage();
                         Toast.makeText(LoginActivity.this, "登录失败"+msg, Toast.LENGTH_LONG).show();
                     }
@@ -68,23 +88,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
-
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
-            }
-        });
     }
 
     private void initView() {
@@ -93,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password);
         passwordEditText.setText("csdn3412");
         loginButton = findViewById(R.id.login);
+        loginButton.setEnabled(true);
         loadingProgressBar = findViewById(R.id.loading);
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override

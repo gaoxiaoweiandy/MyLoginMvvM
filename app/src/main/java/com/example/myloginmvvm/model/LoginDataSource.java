@@ -1,28 +1,20 @@
-package com.example.myloginmvvm.model.login;
+package com.example.myloginmvvm.model;
 
-import android.text.TextUtils;
+import android.app.Application;
+import android.content.ContentValues;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.OnLifecycleEvent;
 
+import com.example.myloginmvvm.MyApplication;
 import com.example.myloginmvvm.bean.JsonLogin;
-import com.example.myloginmvvm.model.Result;
-import com.example.myloginmvvm.model.bean.LoggedInUser;
+import com.example.myloginmvvm.bean.LoginData;
+import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.net.RetrofitManager;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -32,7 +24,7 @@ import rx.schedulers.Schedulers;
  */
 public class LoginDataSource implements LifecycleObserver {
     private Subscription mSubscription;
-    String TAG = "LoginDataSource";
+    String TAG = "AACLoginDataSource";
     static LoginDataSource instance;
 
      static public LoginDataSource  getSigleInstance() {
@@ -44,7 +36,7 @@ public class LoginDataSource implements LifecycleObserver {
         return instance;
     }
 
-    public MutableLiveData<JsonLogin> login(String username, String password, MutableLiveData<JsonLogin> liveData) {
+    public MutableLiveData<JsonLogin> login(String username, String password, MutableLiveData<JsonLogin> liveData, Application app) {
         try {
             // TODO: handle loggedInUser authentication
             mSubscription = RetrofitManager.getApiService()
@@ -52,6 +44,9 @@ public class LoginDataSource implements LifecycleObserver {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(o -> {
+                        Log.i(TAG,"subscribe");
+                        //保存用户数据在本地SharePreference
+
                         JsonLogin jsonLogin = (JsonLogin)o;
                         liveData.postValue(jsonLogin);
                     }, throwable -> {
@@ -60,9 +55,11 @@ public class LoginDataSource implements LifecycleObserver {
                     });
             return liveData;
         } catch (Exception e) {
-            JsonLogin jsonLogin = createThrowableLoginData(e.getCause());
-            liveData.postValue(jsonLogin);
+            JsonLogin jsonLoginException = createThrowableLoginData(e.getCause());
+            liveData.postValue(jsonLoginException);
         }
+
+        Log.i(TAG,"subscribe2");
         return liveData;
     }
 
