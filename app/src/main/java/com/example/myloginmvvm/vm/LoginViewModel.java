@@ -14,15 +14,11 @@ import com.example.myloginmvvm.MyApplication;
 import com.example.myloginmvvm.bean.JsonLogin;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.model.LoginRepository;
-import com.example.myloginmvvm.model.bean.LoginFormState;
-import com.example.myloginmvvm.model.bean.LoginResult;
 import com.example.myloginmvvm.R;
 
 public class LoginViewModel extends AndroidViewModel {
 
     String TAG = "AACLoginViewModel";
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private MutableLiveData<JsonLogin> jsonLoginLiveData = new MutableLiveData<>();
     private LoginRepository loginRepository;
     private Application mApp;
@@ -37,28 +33,10 @@ public class LoginViewModel extends AndroidViewModel {
         return jsonLoginLiveData;
     }
 
-    public LiveData<LoginFormState> getLoginFormState() {
-        return loginFormState;
-    }
-
-    public LiveData<LoginResult> getLoginResult() {
-        return loginResult;
-    }
-
     public LiveData<JsonLogin> login(String username, String password) {
         jsonLoginLiveData = loginRepository.login(username, password,jsonLoginLiveData,mApp);
         Log.i(TAG,"login");
         return jsonLoginLiveData;
-    }
-
-    public void loginDataChanged(String username, String password) {
-        if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
-        } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
-        } else {
-            loginFormState.setValue(new LoginFormState(true));
-        }
     }
 
     // A placeholder username validation check

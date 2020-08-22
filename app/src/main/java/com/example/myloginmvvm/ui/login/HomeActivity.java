@@ -13,7 +13,6 @@ import com.example.myloginmvvm.bean.Device;
 import com.example.myloginmvvm.bean.JsonDeviceList;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.model.HomeDataSource;
-import com.example.myloginmvvm.model.bean.LoggedInUserView;
 import com.example.myloginmvvm.ui.login.adapter.MyDeviceListAdapter;
 import com.example.myloginmvvm.vm.HomeViewModel;
 import java.util.ArrayList;
@@ -88,15 +87,5 @@ public class HomeActivity extends AppCompatActivity {
         lvDevices = this.findViewById(R.id.lvDeviceList);
         mAdapter = new MyDeviceListAdapter(mDeviceList,this);
         lvDevices.setAdapter(mAdapter);
-    }
-
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-    }
-
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 }
