@@ -1,72 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/describeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants"
-    android:orientation="vertical">
+    android:layout_centerVertical="true"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp">
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="名称"></TextView>
 
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:layout_toRightOf="@+id/imvPic"
-            android:gravity="center_vertical"
-           >
-
-            <LinearLayout
-                android:layout_centerVertical="true"
-                android:id="@+id/describeLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="名称"
-                    ></TextView>
-
-                <TextView
-                    android:id="@+id/tvDescribe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvName"
-                    android:layout_marginTop="8dp"
-                    android:text=""
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal"
-                android:layout_marginLeft="6dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/btUnbind"
-                    android:layout_width="64dp"
-                    android:layout_height="32dp"
-                    android:text="解绑"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-</LinearLayout>
+    <TextView
+        android:id="@+id/tvDescribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvName"
+        android:layout_marginTop="8dp"
+        android:text="描述" />
+</RelativeLayout>

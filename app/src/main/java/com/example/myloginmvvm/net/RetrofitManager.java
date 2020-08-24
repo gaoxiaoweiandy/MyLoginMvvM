@@ -1,13 +1,9 @@
 package com.example.myloginmvvm.net;
-
 import android.os.Environment;
-
 import com.example.myloginmvvm.bean.MyConstant;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Cache;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -20,22 +16,22 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by xw.gao
- * on 2020/8/16.
+ * 初始化okhttp,retrofit,获取各模块的RetrofitApiService（包含了所有要调用的后台接口的类）
+ * 单例模式，只有一个RetrofitManager实例，只有一个okhttpClient实例，只有一个retrofit实例。
+ *
  */
 public class RetrofitManager {
     private static RetrofitManager retrofitManager;
     private OkHttpClient okHttpClient;
-    private Retrofit retrofit;
-
+    static private Retrofit retrofit;
     private static Converter.Factory gsonConverterFactory = GsonConverterFactory.create();
     private static CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
-    private RetrofitApiService retrofitApiService;
+    static private RetrofitApiService retrofitApiService;
 
-    private RetrofitManager() {
-        initOkHttpClient();
-        initRetrofit();
-    }
+    /**
+     * 获取RetrofitManager单例
+     * @return
+     */
     public static RetrofitManager getRetrofitManager() {
         if (retrofitManager == null) {
             synchronized (RetrofitManager.class) {
@@ -46,13 +42,31 @@ public class RetrofitManager {
         }
         return retrofitManager;
     }
+
+    /**
+     * 构造函数
+     */
+    private RetrofitManager() {
+        //初始化并生成一个okhttpClient实例
+        initOkHttpClient();
+        //初始化并生成一个Retrofit实例
+        initRetrofit();
+    }
+    /**
+     * 获取Service类：包含了所有后台接口
+     * @return
+     */
     public static RetrofitApiService getApiService() {
         if (retrofitManager == null) {
             retrofitManager = getRetrofitManager();
         }
-        return retrofitManager.retrofitApiService;
+        retrofitApiService = retrofit.create(RetrofitApiService.class);
+        return retrofitApiService;
     }
 
+    /**
+     * 初始化okthttpClient实例
+     */
     private void initOkHttpClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 //设置缓存文件路径，和文件大小
@@ -78,20 +92,22 @@ public class RetrofitManager {
         okHttpClient = builder.build();
     }
 
+    /**
+     * 初始化并生成一个Retrofit实例
+     */
     private void initRetrofit() {
         String baseUrl;
-        if (MyConstant.BUILD_TYPE.equals("debug")) {
-            baseUrl = MyConstant.ROOT;
-        } else {
-            baseUrl = MyConstant.ROOT;
-        }
 
+        if (MyConstant.BUILD_TYPE.equals("debug")) {
+            baseUrl = MyConstant.ROOT_DEBUG;
+        } else {
+            baseUrl = MyConstant.ROOT_RELEASE;
+        }
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(gsonConverterFactory)
                 .addCallAdapterFactory(rxJavaCallAdapterFactory)
                 .client(okHttpClient)
                 .build();
-        retrofitApiService = retrofit.create(RetrofitApiService.class);
     }
 }

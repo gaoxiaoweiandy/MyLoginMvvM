@@ -1,15 +1,16 @@
 package com.example.myloginmvvm.bean;
 
-import androidx.annotation.NonNull;
-
+/**
+ * 登录接口返回的JSON数据结构对应的实体类
+ */
 public class JsonLogin extends DataCommon{
-    LoginData data;
+    JsonLoginData data;
 
-    public LoginData getData() {
+    public JsonLoginData getData() {
         return data;
     }
 
-    public void setData(LoginData data) {
+    public void setData(JsonLoginData data) {
         this.data = data;
     }
 

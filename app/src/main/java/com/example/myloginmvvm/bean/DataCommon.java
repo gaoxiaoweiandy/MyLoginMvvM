@@ -1,7 +1,7 @@
 package com.example.myloginmvvm.bean;
 
 /**
- * Created by xw.gao
+ * 服务端返回的JSON数据的基类，该类包含了所有后台接口返回的公共字段
  */
 
 public class DataCommon {

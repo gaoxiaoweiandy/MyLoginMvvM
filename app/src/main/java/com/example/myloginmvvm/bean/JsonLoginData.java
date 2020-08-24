@@ -1,6 +1,9 @@
 package com.example.myloginmvvm.bean;
 
-public class LoginData {
+/**
+ * 登录接口返回的JsonLogin实体类中的 data数据
+ */
+public class JsonLoginData {
     public String userId;
     public String name;
     public String mobile;

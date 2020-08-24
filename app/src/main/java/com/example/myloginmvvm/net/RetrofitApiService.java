@@ -9,19 +9,29 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 /**
- * Created by leo
- * on 2019/8/14.
- * Retrofit 接口请求配置都在这
+ *  所有服务器接口函数，当然 这里也可以分解成模块，例如为登录创建一个RetrofitLoginApiService，再为首页
+ *  专门创建一个RetrofitHomeApiService
  */
 public interface RetrofitApiService {
 
-
+    /**
+     * 登录
+     * @param mobile： 手机号作为用户名
+     * @param password： 密码
+     * @return
+     */
     @POST("authorization/guardian/login")
     Observable<JsonLogin> login(
                                 @Query("mobile")String mobile,
                                 @Query("password")String password
     );
 
+    /**
+     * 获取首页列表数据
+     * @param userName： 用户名即为mobile
+     * @param userToken: 登录时返回的token
+     * @return
+     */
     @GET("rescue/app/guardian/device")
     Observable<JsonDeviceList> getMyDeviceList(
             @Query("userName")String userName,

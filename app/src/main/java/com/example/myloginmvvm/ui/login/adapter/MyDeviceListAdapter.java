@@ -1,13 +1,10 @@
 package com.example.myloginmvvm.ui.login.adapter;
 import android.content.Context;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.myloginmvvm.R;
 import com.example.myloginmvvm.bean.Device;
@@ -36,7 +33,7 @@ import java.util.ArrayList;
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-			String name = ((Device)item).getOwnerName();
+			String name = item.getDeviceName();
 			StringBuffer deviceIMEI = new StringBuffer("设备号");
 			deviceIMEI.append(item.getDeviceIMEI());
 

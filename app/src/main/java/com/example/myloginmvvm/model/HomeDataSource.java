@@ -15,13 +15,17 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 /**
- * Class that handles authentication w/ login credentials and retrieves user information.
+ * 访问首页接口：调用服务器接口获取列表数据
  */
 public class HomeDataSource implements LifecycleObserver {
     private  String TAG = HomeDataSource.class.getSimpleName() ;
     private Subscription mSubscription;
     static HomeDataSource instance;
 
+    /**
+     * 获取DataSource单例
+     * @return
+     */
     static public HomeDataSource getSigleInstance() {
 
         synchronized(LoginDataSource.class) {
@@ -32,6 +36,13 @@ public class HomeDataSource implements LifecycleObserver {
         return instance;
     }
 
+    /**
+     * 首页列表接口
+     * @param userName：用户名即mobile手机号
+     * @param userToken：登录时返回的token
+     * @param liveData: 要修改的LiveData数据，同时View层（HomeActivity）监听LiveData的数据变更，从而更新UI
+     * @return
+     */
     public MutableLiveData<JsonDeviceList> getMyDeviceList(String userName,String userToken,MutableLiveData<JsonDeviceList> liveData) {
         try {
             // TODO: handle loggedInUser authentication
@@ -56,6 +67,10 @@ public class HomeDataSource implements LifecycleObserver {
     }
 
 
+    /**
+     * 使用LifeCycle自动调用：即当Activity进入OnStop生命周期时，会被LifecycleObserver感知到
+     * 从而自动调用unSubscription函数来释放资源
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void unSubscription()
     {
