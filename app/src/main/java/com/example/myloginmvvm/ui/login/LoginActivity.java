@@ -12,6 +12,7 @@ import com.example.myloginmvvm.R;
 import com.example.myloginmvvm.ViewModelFactory;
 import com.example.myloginmvvm.bean.JsonLogin;
 import com.example.myloginmvvm.bean.TwoDirectionBinding;
+import com.example.myloginmvvm.bean.TwoDirectionBindingSimple;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.databinding.ActivityLoginBinding;
 import com.example.myloginmvvm.model.LoginDataSource;
@@ -51,17 +52,27 @@ public class LoginActivity extends AppCompatActivity {
      * 使用布局文件对象dataBindingLogin，可以告别FindViewById了.
      */
     private void initView() {
+        dataBindingLogin.login.setEnabled(true);
 
-/*      //单向绑定举例，从变量到UI
+        /*
+        //单向绑定举例，从变量到UI
         User user = new User();
         user.setUserPhone("18392086025");
         user.setPassword("csdn3412");
         dataBindingLogin.setUser(user);
        */
+
+
+
+        /*
         //双向绑定
+        原始版（BaseObservable）
         TwoDirectionBinding twoDirectionBinding = new TwoDirectionBinding();
-        dataBindingLogin.setTwoDirectionBinding(twoDirectionBinding);
-        dataBindingLogin.login.setEnabled(true);
+        dataBindingLogin.setTwoDirectionBinding(twoDirectionBinding);*/
+        //简化版（ObservableField）
+        TwoDirectionBindingSimple twoDirectionBindingSimple = new TwoDirectionBindingSimple();
+        dataBindingLogin.setTwoDirectionBindingSimple(twoDirectionBindingSimple);
+
         //去登录
         dataBindingLogin.login.setOnClickListener(new View.OnClickListener() {
             @Override

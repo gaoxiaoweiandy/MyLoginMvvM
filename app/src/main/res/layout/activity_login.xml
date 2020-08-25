@@ -8,9 +8,13 @@
             name="user"
             type="com.example.myloginmvvm.bean.User" />
 
-        <variable
+    <variable
             name="twoDirectionBinding"
             type="com.example.myloginmvvm.bean.TwoDirectionBinding" />
+
+        <variable
+            name="twoDirectionBindingSimple"
+            type="com.example.myloginmvvm.bean.TwoDirectionBindingSimple" />
 
     </data>
 
@@ -45,7 +49,7 @@
             android:text="@={twoDirectionBinding.userName}"
          -->
         <EditText
-            android:text="@={twoDirectionBinding.userName}"
+            android:text="@={twoDirectionBindingSimple.userName}"
             android:id="@+id/username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -67,7 +71,7 @@
              android:text="@={twoDirectionBinding.password}"
             -->
         <EditText
-            android:text="@={twoDirectionBinding.password}"
+            android:text="@={twoDirectionBindingSimple.password}"
             android:id="@+id/password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

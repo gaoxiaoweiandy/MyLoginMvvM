@@ -7,6 +7,21 @@ import androidx.databinding.Bindable;
 
 import com.example.myloginmvvm.BR;
 
+/**
+ * 双向绑定:
+ *
+ * 方向1：从UI到变量
+ * EditText的内容被用户手动修改后，会自动调用setUserName（userName）\setPassword(password)，
+ * 将ditText的内容传递过来，用于修改本地javaBean对象中的成员变量。
+ *
+ * 方向2：从变量到UI
+ * getUserName和getPassword方法上添加注解：@Bindable
+ *
+ * 最后需要在layout布局文件里的EditText.text属性 赋值为如下表达式：
+ * @={twoDirectionBinding.password}
+ * @={twoDirectionBinding.userName}
+ *
+ */
 public class TwoDirectionBinding extends BaseObservable {
     private User user;
     String TAG = "TwoDirectionBinding";
@@ -25,7 +40,9 @@ public class TwoDirectionBinding extends BaseObservable {
     @Bindable
     public String getUserName()
     {
-        return user.getUserPhone();
+        String userName = user.getUserPhone();
+        Log.i(TAG,"从变量到UI,userName="+userName);
+        return userName;
     }
 
     /**
@@ -34,13 +51,9 @@ public class TwoDirectionBinding extends BaseObservable {
      */
     public void setUserName(String userName)
     {
-        if(userName != null && !userName.equals(user.getUserPhone()))
-        {
             user.setUserPhone(userName);
             notifyPropertyChanged(BR.userName);
             Log.i(TAG,"用户名双向绑定，从UI到变量,userName="+user.getUserPhone());
-        }
-
     }
 
     /**
@@ -50,7 +63,9 @@ public class TwoDirectionBinding extends BaseObservable {
     @Bindable
     public String getPassword()
     {
-        return user.getPassword();
+        String password = user.getPassword();
+        Log.i(TAG,"从变量到UI,password="+password);
+        return password;
     }
 
     /**
@@ -59,12 +74,8 @@ public class TwoDirectionBinding extends BaseObservable {
      */
     public void setPassword(String password)
     {
-        if(password != null && !password.equals(user.getPassword()))
-        {
             user.setPassword(password);
             notifyPropertyChanged(BR.password);
             Log.i(TAG,"密码双向绑定，从UI到变量,password="+user.getPassword());
-        }
-
     }
 }
