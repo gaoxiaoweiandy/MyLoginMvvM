@@ -4,4 +4,4 @@
 2. 本Demo目前还没用到可读性差并且复杂的泛型模板类等语法。
 
 架构图如下：
-![](https://github.com/gaoxiaoweiandy/MyLoginMvvM/blob/master/images/MVVM.png)
+![](https://github.com/gaoxiaoweiandy/MyLoginMvvM/blob/master/images/mvvm.jpg)
