@@ -1,35 +1,33 @@
 package com.example.myloginmvvm.ui.login;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.myloginmvvm.MyApplication;
 import com.example.myloginmvvm.R;
 import com.example.myloginmvvm.ViewModelFactory;
 import com.example.myloginmvvm.bean.JsonLogin;
+import com.example.myloginmvvm.bean.User;
+import com.example.myloginmvvm.databinding.ActivityLoginBinding;
 import com.example.myloginmvvm.model.LoginDataSource;
 import com.example.myloginmvvm.vm.LoginViewModel;
-
 
 /**
  * 登录页面
  */
 public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
-     EditText usernameEditText;
-     EditText passwordEditText;
-     Button loginButton;
-     ProgressBar loadingProgressBar;
+     ActivityLoginBinding dataBindingLogin;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        //实例化布局文件对象(dataBindingLogin)
+        dataBindingLogin = DataBindingUtil.setContentView(this,R.layout.activity_login);
         initView();
         loginViewModel = ViewModelProviders.of(this, new ViewModelFactory((MyApplication) getApplication())).get(LoginViewModel.class);
         /*
@@ -49,24 +47,25 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * 初始化UI控件
+     * 使用布局文件对象dataBindingLogin，可以告别FindViewById了.
      */
     private void initView() {
-        usernameEditText = findViewById(R.id.username);
-        usernameEditText.setText("18392086025");
-        passwordEditText = findViewById(R.id.password);
-        passwordEditText.setText("csdn3412");
-        loginButton = findViewById(R.id.login);
-        loginButton.setEnabled(true);
-        loadingProgressBar = findViewById(R.id.loading);
+
+        //单向绑定举例，从变量到UI
+        User user = new User();
+        user.setUserPhone("18392086025");
+        user.setPassword("csdn3412");
+        dataBindingLogin.setUser(user);
+        dataBindingLogin.login.setEnabled(true);
 
         //去登录
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        dataBindingLogin.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
+                dataBindingLogin.loading.setVisibility(View.VISIBLE);
                 //VM层去调遣Model层（Repository+DataSource）获取数据
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.login(dataBindingLogin.username.getText().toString(),
+                        dataBindingLogin.password.getText().toString());
             }
         });
     }
@@ -75,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.getJsonLogin().observe(this, new Observer<JsonLogin>() {
             @Override
             public void onChanged(JsonLogin jsonLogin) {
-                loadingProgressBar.setVisibility(View.GONE);
+                dataBindingLogin.loading.setVisibility(View.GONE);
                 int status = jsonLogin.getStatus();
                 if (status == 1) {
                     Intent i = new Intent(LoginActivity.this, HomeActivity.class);
@@ -91,7 +90,6 @@ public class LoginActivity extends AppCompatActivity {
                          msg = jsonLogin.getMsg();
                     }
                     Toast.makeText(LoginActivity.this, "登录失败"+msg, Toast.LENGTH_LONG).show();
-
                 }
 
             }

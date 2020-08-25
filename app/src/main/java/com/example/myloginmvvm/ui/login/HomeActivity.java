@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import com.example.myloginmvvm.R;
@@ -12,6 +13,7 @@ import com.example.myloginmvvm.ViewModelFactory;
 import com.example.myloginmvvm.bean.Device;
 import com.example.myloginmvvm.bean.JsonDeviceList;
 import com.example.myloginmvvm.bean.User;
+import com.example.myloginmvvm.databinding.ActivityHomeBinding;
 import com.example.myloginmvvm.model.HomeDataSource;
 import com.example.myloginmvvm.ui.login.adapter.MyDeviceListAdapter;
 import com.example.myloginmvvm.vm.HomeViewModel;
@@ -26,12 +28,13 @@ public class HomeActivity extends AppCompatActivity {
     private MyDeviceListAdapter mAdapter;
     private ArrayList<Device> mDeviceList = new ArrayList<Device>();
     private HomeViewModel homeViewModel;
+    private ActivityHomeBinding dataBindingHome;
     String TAG = "AACHomeActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        dataBindingHome = DataBindingUtil.setContentView(this,R.layout.activity_home);
         getLastIntent();
         initView();
         /*
@@ -56,11 +59,11 @@ public class HomeActivity extends AppCompatActivity {
 
     /**
      * 初始化UI
+     * 使用DataBinding再也不需要findViewById了
      */
     private void initView() {
-        lvDevices = this.findViewById(R.id.lvDeviceList);
         mAdapter = new MyDeviceListAdapter(mDeviceList,this);
-        lvDevices.setAdapter(mAdapter);
+        dataBindingHome.lvDeviceList.setAdapter(mAdapter);
     }
 
     /**
