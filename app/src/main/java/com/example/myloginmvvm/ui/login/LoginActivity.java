@@ -11,6 +11,7 @@ import com.example.myloginmvvm.MyApplication;
 import com.example.myloginmvvm.R;
 import com.example.myloginmvvm.ViewModelFactory;
 import com.example.myloginmvvm.bean.JsonLogin;
+import com.example.myloginmvvm.bean.TwoDirectionBinding;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.databinding.ActivityLoginBinding;
 import com.example.myloginmvvm.model.LoginDataSource;
@@ -51,13 +52,16 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void initView() {
 
-        //单向绑定举例，从变量到UI
+/*      //单向绑定举例，从变量到UI
         User user = new User();
         user.setUserPhone("18392086025");
         user.setPassword("csdn3412");
         dataBindingLogin.setUser(user);
+       */
+        //双向绑定
+        TwoDirectionBinding twoDirectionBinding = new TwoDirectionBinding();
+        dataBindingLogin.setTwoDirectionBinding(twoDirectionBinding);
         dataBindingLogin.login.setEnabled(true);
-
         //去登录
         dataBindingLogin.login.setOnClickListener(new View.OnClickListener() {
             @Override

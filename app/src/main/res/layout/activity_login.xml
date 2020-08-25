@@ -7,6 +7,11 @@
         <variable
             name="user"
             type="com.example.myloginmvvm.bean.User" />
+
+        <variable
+            name="twoDirectionBinding"
+            type="com.example.myloginmvvm.bean.TwoDirectionBinding" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,9 +38,14 @@
             app:layout_constraintTop_toBottomOf="@+id/password"
             app:layout_constraintVertical_bias="0.2" />
 
-
-        <EditText
+        <!-- 用户名：
+            单向绑定举例
             android:text="@{user.userPhone}"
+            双向绑定举例
+            android:text="@={twoDirectionBinding.userName}"
+         -->
+        <EditText
+            android:text="@={twoDirectionBinding.userName}"
             android:id="@+id/username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -50,9 +60,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-
+        <!-- 密码：
+             单向绑定举例
+             android:text="@{user.password}"
+             双向绑定举例
+             android:text="@={twoDirectionBinding.password}"
+            -->
         <EditText
-            android:text="@{user.password}"
+            android:text="@={twoDirectionBinding.password}"
             android:id="@+id/password"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
