@@ -1,6 +1,5 @@
 package com.example.myloginmvvm.bean;
 import android.util.Log;
-import androidx.databinding.Bindable;
 import androidx.databinding.ObservableField;
 
 

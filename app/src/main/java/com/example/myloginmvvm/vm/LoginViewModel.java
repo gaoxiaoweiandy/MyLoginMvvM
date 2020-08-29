@@ -3,7 +3,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import android.app.Application;
-import android.util.Log;
 import com.example.myloginmvvm.MyApplication;
 import com.example.myloginmvvm.bean.JsonLogin;
 import com.example.myloginmvvm.model.LoginRepository;
@@ -39,7 +38,6 @@ public class LoginViewModel extends AndroidViewModel {
      */
     public LiveData<JsonLogin> login(String username, String password) {
         jsonLoginLiveData = loginRepository.login(username, password,jsonLoginLiveData,mApp);
-        Log.i(TAG,"login");
         return jsonLoginLiveData;
     }
 }

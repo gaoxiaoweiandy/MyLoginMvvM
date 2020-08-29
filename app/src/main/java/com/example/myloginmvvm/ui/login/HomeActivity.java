@@ -2,14 +2,10 @@ package com.example.myloginmvvm.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import com.example.myloginmvvm.R;
-import com.example.myloginmvvm.ViewModelFactory;
 import com.example.myloginmvvm.bean.Device;
 import com.example.myloginmvvm.bean.JsonDeviceList;
 import com.example.myloginmvvm.bean.User;
@@ -22,28 +18,17 @@ import java.util.ArrayList;
 /**
  * 首页：显示一个列表，这里为多条设备信息.
  */
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity<HomeViewModel, ActivityHomeBinding> {
+    String TAG  = "AACHomeActivity";
     private String mUserName;
-    private ListView lvDevices;
     private MyDeviceListAdapter mAdapter;
     private ArrayList<Device> mDeviceList = new ArrayList<Device>();
-    private HomeViewModel homeViewModel;
-    private ActivityHomeBinding dataBindingHome;
-    String TAG = "AACHomeActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataBindingHome = DataBindingUtil.setContentView(this,R.layout.activity_home);
         getLastIntent();
         initView();
-        /*
-        让HomeDataSource能感知Activity的生命周期，在Activity.onstop的时候，HomeDataSouce中的某些函数会自动执行,
-        这里用到的正是Android JetPack架构组件中的 “LifeCycle”.
-        */
-        getLifecycle().addObserver(HomeDataSource.getSigleInstance());
-        homeViewModel = ViewModelProviders.of(this, new ViewModelFactory()).get(HomeViewModel.class);
-
         //使用Android JetPack架构组件中的 “liveData”监听数据的变化，一旦有变化则让UI显示这些数据——观察者模式。
         initLiveDataObserve();
     }
@@ -54,7 +39,27 @@ public class HomeActivity extends AppCompatActivity {
         User user = new User(getApplication());
         String token = user.getUserToken();
         //VM层去调遣Model层（Repository+DataSource）获取数据
-        homeViewModel.getMyDeviceList(mUserName,token);
+        mViewModel.getMyDeviceList(mUserName,token);
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i(TAG,"onStop");
+        super.onStop();
+    }
+
+    @Override
+    int getContentViewId() {
+        return R.layout.activity_home;
+    }
+
+    /*
+      让HomeDataSource能感知Activity的生命周期，在Activity.onstop的时候，HomeDataSouce中的某些函数会自动执行,
+      这里用到的正是Android JetPack架构组件中的 “LifeCycle”.
+      */
+    @Override
+    protected void addLifeCycleObserver() {
+        getLifecycle().addObserver((LifecycleObserver) HomeDataSource.getSingleInstance());
     }
 
     /**
@@ -63,7 +68,7 @@ public class HomeActivity extends AppCompatActivity {
      */
     private void initView() {
         mAdapter = new MyDeviceListAdapter(mDeviceList,this);
-        dataBindingHome.lvDeviceList.setAdapter(mAdapter);
+        mDataBinding.lvDeviceList.setAdapter(mAdapter);
     }
 
     /**
@@ -94,7 +99,7 @@ public class HomeActivity extends AppCompatActivity {
      * LiveData观察数据的变化，从而更新UI
      */
     private void initLiveDataObserve() {
-        homeViewModel.getDeviceListLiveData().observe(this, new Observer<JsonDeviceList>() {
+        mViewModel.getDeviceListLiveData().observe(this, new Observer<JsonDeviceList>() {
             @Override
             public void onChanged(JsonDeviceList jsonDeviceList) {
                 try

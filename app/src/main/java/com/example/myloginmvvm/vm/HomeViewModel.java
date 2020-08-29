@@ -1,9 +1,6 @@
 package com.example.myloginmvvm.vm;
-import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.example.myloginmvvm.bean.JsonDeviceList;
 import com.example.myloginmvvm.model.HomeRepository;
 

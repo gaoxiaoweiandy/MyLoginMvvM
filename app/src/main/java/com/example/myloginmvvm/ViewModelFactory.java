@@ -27,7 +27,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     }
 
     /**
-     *
+     *生成各页面的ViewModel
      * @param modelClass:VM层的类型，本Demo为LoginViewModel和HomeViewModel将会代替<T>
      * @param <T> 类泛型
      * @return ViewModel
@@ -39,11 +39,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(LoginViewModel.class)) {
 
             //生成VM层实例，其中HomeRepository+HomeDataSource共同构成了M层。
-            return (T) new LoginViewModel(mApp,LoginRepository.getInstance(LoginDataSource.getSigleInstance()));
+            return (T) new LoginViewModel(mApp,LoginRepository.getInstance(LoginDataSource.getSingleInstance()));
         }
         else if (modelClass.isAssignableFrom(HomeViewModel.class)) {
             //生成VM层实例，其中HomeRepository+HomeDataSource共同构成了M层。
-            return (T) new HomeViewModel(HomeRepository.getInstance(new HomeDataSource()));
+            return (T) new HomeViewModel(HomeRepository.getInstance( HomeDataSource.getSingleInstance()));
         }else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
