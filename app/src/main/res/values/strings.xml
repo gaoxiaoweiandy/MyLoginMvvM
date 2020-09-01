@@ -9,4 +9,9 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <string name="result_network_error">网络不给力，请检查网络</string>
+    <string name="result_server_error">服务器连接失败，请稍后再试</string>
+    <string name="result_server_timeout">服务器连接超时，请稍后再试</string>
+    <string name="result_empty_error">系统繁忙，请稍后再试</string>
 </resources>

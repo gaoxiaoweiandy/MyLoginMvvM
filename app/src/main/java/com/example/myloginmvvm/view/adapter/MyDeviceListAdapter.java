@@ -1,4 +1,4 @@
-package com.example.myloginmvvm.ui.login.adapter;
+package com.example.myloginmvvm.view.adapter;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;

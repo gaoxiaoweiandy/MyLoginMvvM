@@ -2,10 +2,13 @@ package com.example.myloginmvvm.model;
 import android.app.Application;
 import android.content.ContentValues;
 import androidx.lifecycle.MutableLiveData;
-import com.example.myloginmvvm.bean.JsonLogin;
+import com.example.myloginmvvm.bean.JsonDataCommon;
+import com.example.myloginmvvm.bean.JsonLoginData;
+import com.example.myloginmvvm.bean.Result;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.net.RetrofitManager;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
 /**
@@ -34,26 +37,32 @@ public class LoginDataSource extends BaseDataSource  {
      * @param liveData: 要修改的LiveData数据，同时View层（LoginActivity）监听LiveData的数据变更，从而更新UI
      * @return
      */
-    public MutableLiveData<JsonLogin> login(String username, String password, MutableLiveData<JsonLogin> liveData, Application app) {
+    public MutableLiveData<Result<JsonLoginData>> login(String username, String password, MutableLiveData<Result<JsonLoginData>> liveData, Application app) {
         try {
             // TODO: handle loggedInUser authentication
             mSubscription = RetrofitManager.getApiService()
                     .login(username,password)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(o -> {
+                    .doOnSubscribe(new Action0() {
+                        @Override
+                        public void call() {
+                            liveData.postValue(Result.loading(""));
+                        }
+                    })
+                    .subscribe(data -> {
                         //保存用户数据在本地SharePreference
-                        JsonLogin jsonLogin = (JsonLogin)o;
+                        JsonDataCommon<JsonLoginData> jsonLogin = data;
                         saveUserData(jsonLogin.getData().getToken(),app);
-                        liveData.postValue(jsonLogin);
+                        liveData.postValue(Result.response((JsonDataCommon<JsonLoginData>)jsonLogin));
+                        liveData.postValue(Result.response(data));
                     }, throwable -> {
-                        JsonLogin jsonLogin = createThrowableData(new JsonLogin(),throwable);
-                        liveData.postValue(jsonLogin);
+
+                        liveData.postValue(Result.error(throwable));
                     });
             return liveData;
         } catch (Exception e) {
-            JsonLogin jsonLoginException = createThrowableData(new JsonLogin(),e.getCause());
-            liveData.postValue(jsonLoginException);
+            liveData.postValue(Result.error(e.getCause()));
         }
 
         return liveData;

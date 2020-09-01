@@ -1,8 +1,7 @@
 package com.example.myloginmvvm.model;
-
 import androidx.lifecycle.MutableLiveData;
-
-import com.example.myloginmvvm.bean.JsonDeviceList;
+import com.example.myloginmvvm.bean.JsonDeviceListData;
+import com.example.myloginmvvm.bean.Result;
 
 /**
  * 可以将Repository和 DataSource这两者合并起来看作是MVVM中的Model层，实质最终获取服务起数据的是DataSource,
@@ -33,7 +32,7 @@ public class HomeRepository {
      * @param liveData: 要修改的LiveData数据，同时View层（HomeActivity）监听LiveData的数据变更，从而更新UI
      * @return
      */
-    public MutableLiveData<JsonDeviceList> getMyDeviceList(String userName,String userToken,MutableLiveData<JsonDeviceList> liveData) {
+    public MutableLiveData<Result<JsonDeviceListData>> getMyDeviceList(String userName, String userToken, MutableLiveData<Result<JsonDeviceListData>> liveData) {
         return dataSource.getMyDeviceList( userName ,userToken,liveData);
     }
 

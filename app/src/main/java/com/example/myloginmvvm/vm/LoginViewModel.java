@@ -1,10 +1,10 @@
 package com.example.myloginmvvm.vm;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import android.app.Application;
 import com.example.myloginmvvm.MyApplication;
-import com.example.myloginmvvm.bean.JsonLogin;
+import com.example.myloginmvvm.bean.JsonLoginData;
+import com.example.myloginmvvm.bean.Result;
 import com.example.myloginmvvm.model.LoginRepository;
 /**
  * 登录页面的VM层，调用M层去获取数据，同时更改liveData的数据，从而View层（LoginActivity)就能观察到LiveData数据的
@@ -13,7 +13,7 @@ import com.example.myloginmvvm.model.LoginRepository;
 public class LoginViewModel extends AndroidViewModel {
 
     String TAG = "AACLoginViewModel";
-    private MutableLiveData<JsonLogin> jsonLoginLiveData = new MutableLiveData<>();
+    private MutableLiveData<Result<JsonLoginData>> jsonLoginLiveData = new MutableLiveData<>();
     private LoginRepository loginRepository; //M层引用
     private MyApplication mApp;
 
@@ -27,7 +27,7 @@ public class LoginViewModel extends AndroidViewModel {
         this.mApp = getApplication();
         this.loginRepository = loginRepository;
     }
-    public MutableLiveData<JsonLogin> getJsonLogin() {
+    public MutableLiveData<Result<JsonLoginData>> getJsonLogin() {
         return jsonLoginLiveData;
     }
     /**
@@ -36,7 +36,7 @@ public class LoginViewModel extends AndroidViewModel {
      * @param password： 密码
      * @return
      */
-    public LiveData<JsonLogin> login(String username, String password) {
+    public MutableLiveData<Result<JsonLoginData>> login(String username, String password) {
         jsonLoginLiveData = loginRepository.login(username, password,jsonLoginLiveData,mApp);
         return jsonLoginLiveData;
     }

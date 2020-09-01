@@ -1,11 +1,12 @@
-package com.example.myloginmvvm.ui.login;
+package com.example.myloginmvvm.view;
 import androidx.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import com.example.myloginmvvm.R;
-import com.example.myloginmvvm.bean.JsonLogin;
+import com.example.myloginmvvm.bean.JsonLoginData;
+import com.example.myloginmvvm.bean.Result;
 import com.example.myloginmvvm.bean.TwoDirectionBindingSimple;
 import com.example.myloginmvvm.databinding.ActivityLoginBinding;
 import com.example.myloginmvvm.model.LoginDataSource;
@@ -71,7 +72,6 @@ public class LoginActivity extends BaseActivity<LoginViewModel,ActivityLoginBind
         mDataBinding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDataBinding.loading.setVisibility(View.VISIBLE);
                 //VM层去调遣Model层（Repository+DataSource）获取数据
                 mViewModel.login(mDataBinding.username.getText().toString(),
                         mDataBinding.password.getText().toString());
@@ -83,29 +83,23 @@ public class LoginActivity extends BaseActivity<LoginViewModel,ActivityLoginBind
      * liveData观察者监听数据变化，从而更新UI
      */
     private void initLiveDataObersve() {
-        //观察服务器返回的数据
-        mViewModel.getJsonLogin().observe(this, new Observer<JsonLogin>() {
+
+        mViewModel.getJsonLogin().observe(this, new Observer<Result<JsonLoginData>>() {
             @Override
-            public void onChanged(JsonLogin jsonLogin) {
-                mDataBinding.loading.setVisibility(View.GONE);
-                int status = jsonLogin.getStatus();
-                if (status == 1) {
-                    Intent i = new Intent(LoginActivity.this, HomeActivity.class);
-                    i.putExtra("userName",jsonLogin.getData().getMobile());
-                    startActivity(i);
-                    Toast.makeText(LoginActivity.this, "登录成功",Toast.LENGTH_SHORT).show();
-                } else {
-                    String msg;
-                    if(status == -1) { //通信异常
-                         msg =  jsonLogin.getThrowable().getMessage();
+            public void onChanged(Result<JsonLoginData> result) {
+
+                result.handler(new OnCallback<JsonLoginData>() {
+                    @Override
+                    public void onSuccess(JsonLoginData data) {
+                        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                        i.putExtra("userName",data.getMobile());
+                        startActivity(i);
+                        Toast.makeText(LoginActivity.this, "登录成功",Toast.LENGTH_SHORT).show();
                     }
-                    else {//业务上的失败
-                         msg = jsonLogin.getMsg();
-                    }
-                    Toast.makeText(LoginActivity.this, "登录失败"+msg, Toast.LENGTH_LONG).show();
-                }
+                });
 
             }
         });
+
     }
 }

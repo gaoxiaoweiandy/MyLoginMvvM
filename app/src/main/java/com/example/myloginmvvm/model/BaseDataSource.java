@@ -3,7 +3,6 @@ import android.util.Log;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
-import com.example.myloginmvvm.bean.DataCommon;
 import rx.Subscription;
 
 
@@ -27,19 +26,5 @@ public class BaseDataSource implements LifecycleObserver {
             mSubscription.unsubscribe();
             Log.i(TAG,"AACunSubscription");
         }
-    }
-
-    /**
-     *
-     * @param jsonData
-     * @param throwable
-     * @param <T>
-     * @return
-     */
-    public <T extends DataCommon> T createThrowableData(T jsonData, Throwable throwable)
-    {
-        jsonData.setStatus(-1);
-        jsonData.setThrowable(throwable);
-        return jsonData;
     }
 }

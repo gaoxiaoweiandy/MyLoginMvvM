@@ -1,17 +1,17 @@
-package com.example.myloginmvvm.ui.login;
+package com.example.myloginmvvm.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
 import com.example.myloginmvvm.R;
 import com.example.myloginmvvm.bean.Device;
-import com.example.myloginmvvm.bean.JsonDeviceList;
+import com.example.myloginmvvm.bean.JsonDeviceListData;
+import com.example.myloginmvvm.bean.Result;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.databinding.ActivityHomeBinding;
 import com.example.myloginmvvm.model.HomeDataSource;
-import com.example.myloginmvvm.ui.login.adapter.MyDeviceListAdapter;
+import com.example.myloginmvvm.view.adapter.MyDeviceListAdapter;
 import com.example.myloginmvvm.vm.HomeViewModel;
 import java.util.ArrayList;
 
@@ -83,10 +83,10 @@ public class HomeActivity extends BaseActivity<HomeViewModel, ActivityHomeBindin
      * 更新设备列表
      * @param userDeviceJson:服务器返回的JSON数据结构
      */
-    public void updateDeviceList(JsonDeviceList userDeviceJson)
+    public void updateDeviceList(JsonDeviceListData userDeviceJson)
     {
         mDeviceList.clear();
-        ArrayList<Device> deviceList =  userDeviceJson.getObjectbean().getDeviceList();
+        ArrayList<Device> deviceList = userDeviceJson.getDeviceList();
         if(deviceList!=null && deviceList.size()>0)
         {
             mDeviceList.addAll(deviceList);
@@ -99,27 +99,17 @@ public class HomeActivity extends BaseActivity<HomeViewModel, ActivityHomeBindin
      * LiveData观察数据的变化，从而更新UI
      */
     private void initLiveDataObserve() {
-        mViewModel.getDeviceListLiveData().observe(this, new Observer<JsonDeviceList>() {
+
+        mViewModel.getDeviceListLiveData().observe(this, new Observer<Result<JsonDeviceListData>>() {
             @Override
-            public void onChanged(JsonDeviceList jsonDeviceList) {
-                try
-                {
-                    if(jsonDeviceList.getStatus() == 1)
-                    {
-                        //更新列表数据
-                        updateDeviceList(jsonDeviceList);
+            public void onChanged(Result<JsonDeviceListData> result) {
+                result.handler(new OnCallback<JsonDeviceListData>() {
+                    @Override
+                    public void onSuccess(JsonDeviceListData data) {
+                        updateDeviceList(data);
                     }
-                    else {
-                        String msg = jsonDeviceList.getMsg();
-                        Toast.makeText(HomeActivity.this,msg,Toast.LENGTH_SHORT).show();
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                });
             }
         });
     }
-
 }

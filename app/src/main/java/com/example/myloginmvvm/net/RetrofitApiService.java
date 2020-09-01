@@ -1,6 +1,7 @@
 package com.example.myloginmvvm.net;
-import com.example.myloginmvvm.bean.JsonDeviceList;
-import com.example.myloginmvvm.bean.JsonLogin;
+import com.example.myloginmvvm.bean.JsonDataCommon;
+import com.example.myloginmvvm.bean.JsonDeviceListData;
+import com.example.myloginmvvm.bean.JsonLoginData;
 
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -21,7 +22,7 @@ public interface RetrofitApiService {
      * @return
      */
     @POST("authorization/guardian/login")
-    Observable<JsonLogin> login(
+    Observable<JsonDataCommon<JsonLoginData>> login(
                                 @Query("mobile")String mobile,
                                 @Query("password")String password
     );
@@ -33,7 +34,7 @@ public interface RetrofitApiService {
      * @return
      */
     @GET("rescue/app/guardian/device")
-    Observable<JsonDeviceList> getMyDeviceList(
+    Observable<JsonDataCommon<JsonDeviceListData>> getMyDeviceList(
             @Query("userName")String userName,
             @Header("Authorization")String userToken
     );

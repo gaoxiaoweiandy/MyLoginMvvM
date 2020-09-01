@@ -1,7 +1,9 @@
 package com.example.myloginmvvm.vm;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import com.example.myloginmvvm.bean.JsonDeviceList;
+
+import com.example.myloginmvvm.bean.JsonDeviceListData;
+import com.example.myloginmvvm.bean.Result;
 import com.example.myloginmvvm.model.HomeRepository;
 
 /**
@@ -10,13 +12,13 @@ import com.example.myloginmvvm.model.HomeRepository;
  */
 public class HomeViewModel extends ViewModel {
     String TAG = "AACHomeViewModel";
-    private MutableLiveData<JsonDeviceList> deviceListLiveData = new MutableLiveData<>();
+    private MutableLiveData<Result<JsonDeviceListData>> deviceListLiveData = new MutableLiveData<Result<JsonDeviceListData>>();
     private HomeRepository homeRepository;
 
     public HomeViewModel(HomeRepository homeRepository) {
         this.homeRepository = homeRepository;
     }
-    public MutableLiveData<JsonDeviceList> getDeviceListLiveData() {
+    public MutableLiveData<Result<JsonDeviceListData>> getDeviceListLiveData() {
         return deviceListLiveData;
     }
 
@@ -26,9 +28,8 @@ public class HomeViewModel extends ViewModel {
      * @param token： 登录接口返回的token
      * @return
      */
-    public MutableLiveData<JsonDeviceList>  getMyDeviceList(String username,String token) {
-        MutableLiveData<JsonDeviceList> result = null;
-        result = homeRepository.getMyDeviceList(username,token,deviceListLiveData);
+    public MutableLiveData<Result<JsonDeviceListData>>  getMyDeviceList(String username,String token) {
+        MutableLiveData<Result<JsonDeviceListData>>  result = homeRepository.getMyDeviceList(username,token,deviceListLiveData);
         return result;
     }
 
