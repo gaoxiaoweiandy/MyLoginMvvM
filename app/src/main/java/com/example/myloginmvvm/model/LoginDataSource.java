@@ -52,9 +52,7 @@ public class LoginDataSource extends BaseDataSource  {
                     })
                     .subscribe(data -> {
                         //保存用户数据在本地SharePreference
-                        JsonDataCommon<JsonLoginData> jsonLogin = data;
-                        saveUserData(jsonLogin.getData().getToken(),app);
-                        liveData.postValue(Result.response((JsonDataCommon<JsonLoginData>)jsonLogin));
+                        saveUserData(data.getData().getToken(),app);
                         liveData.postValue(Result.response(data));
                     }, throwable -> {
 
