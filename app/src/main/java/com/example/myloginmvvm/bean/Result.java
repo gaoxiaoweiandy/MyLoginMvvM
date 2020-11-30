@@ -38,9 +38,6 @@ public class Result<T> {
         return new Result<>(LOADING, null, showMsg);
     }
 
-    public static <T> Result<T> success(T data) {
-        return new Result<>(SUCCESS, data, null);
-    }
 
     public static <T> Result<T> response(JsonDataCommon<T> data) {
         if (data != null) {

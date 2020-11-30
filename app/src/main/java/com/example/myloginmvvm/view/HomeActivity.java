@@ -2,6 +2,8 @@ package com.example.myloginmvvm.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.Observer;
 import com.example.myloginmvvm.R;
@@ -69,6 +71,14 @@ public class HomeActivity extends BaseActivity<HomeViewModel, ActivityHomeBindin
     private void initView() {
         mAdapter = new MyDeviceListAdapter(mDeviceList,this);
         mDataBinding.lvDeviceList.setAdapter(mAdapter);
+        mDataBinding.btUploadHeadPictrue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(HomeActivity.this,UserInfoActivity.class);
+                startActivity(i);
+
+            }
+        });
     }
 
     /**

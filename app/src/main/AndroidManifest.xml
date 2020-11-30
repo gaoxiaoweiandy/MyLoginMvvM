@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myloginmvvm">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -22,7 +20,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.HomeActivity"></activity>
+        <activity
+            android:name=".view.HomeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".view.UserInfoActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

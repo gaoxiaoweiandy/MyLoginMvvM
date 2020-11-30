@@ -16,4 +16,29 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+
+    <!--Toolbar风格，解决标题与返回键 离的太远的问题-->
+    <style name="Toolbar.MyStyle" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
+    <!--Toolbar标题文字大小,颜色-->
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/large_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- 选择照片底部弹出层 -->
+    <style name="PopupAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
+    <!-- EditText自定义属性 -->
+    <declare-styleable name="MyEditText">
+        <attr name="maxLength" format="integer"></attr>
+        <attr name="editType" format="integer"></attr>
+    </declare-styleable>
 </resources>

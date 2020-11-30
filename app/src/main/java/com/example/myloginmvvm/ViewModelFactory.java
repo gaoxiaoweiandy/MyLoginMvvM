@@ -8,6 +8,7 @@ import com.example.myloginmvvm.model.LoginDataSource;
 import com.example.myloginmvvm.model.LoginRepository;
 import com.example.myloginmvvm.vm.HomeViewModel;
 import com.example.myloginmvvm.vm.LoginViewModel;
+import com.example.myloginmvvm.vm.UserInfoViewModel;
 
 /**
  这个工厂用来 生成ViewModel（VM层的实例）
@@ -42,7 +43,13 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         else if (modelClass.isAssignableFrom(HomeViewModel.class)) {
             //生成VM层实例，其中HomeRepository+HomeDataSource共同构成了M层。
             return (T) new HomeViewModel(HomeRepository.getInstance( HomeDataSource.getSingleInstance()));
-        }else {
+        }
+        else if(modelClass.isAssignableFrom(UserInfoViewModel.class))
+        {
+            //生成VM层实例，其中HomeRepository+HomeDataSource共同构成了M层。
+            return (T) new UserInfoViewModel(LoginRepository.getInstance( LoginDataSource.getSingleInstance()));
+        }
+        else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }
     }

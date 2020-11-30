@@ -1,8 +1,12 @@
 package com.example.myloginmvvm.view;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.AndroidViewModel;
@@ -37,6 +41,11 @@ public abstract class BaseActivity<VM extends ViewModel,VDB extends ViewDataBind
         //创建每一个Activity对应的ViewModel
         createViewModel();
         addLifeCycleObserver();
+
+       // setToolBar();
+
+
+
     }
     @Override
     protected void onStart() {
@@ -117,5 +126,25 @@ public abstract class BaseActivity<VM extends ViewModel,VDB extends ViewDataBind
 
         }
     }
+
+
+    public void setToolBar(Toolbar toolBar)
+    {
+
+        if(toolBar != null) {
+            setSupportActionBar(toolBar);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
+    }
+
+
 
 }

@@ -6,6 +6,7 @@ import android.app.Application;
  * 可作为一个全局行的Context
  */
 public class MyApplication extends Application {
+    static public String protectorPicFilePath="";
     public static MyApplication instance;
     public static MyApplication getInstance()
     {
