@@ -24,11 +24,14 @@
             android:name=".view.HomeActivity"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".view.UserInfoActivity"
             android:screenOrientation="portrait"></activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入对象存储BOS数据 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

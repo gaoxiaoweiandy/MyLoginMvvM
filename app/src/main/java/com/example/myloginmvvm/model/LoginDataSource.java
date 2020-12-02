@@ -7,6 +7,13 @@ import com.example.myloginmvvm.bean.JsonLoginData;
 import com.example.myloginmvvm.bean.Result;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.net.RetrofitManager;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
@@ -65,6 +72,47 @@ public class LoginDataSource extends BaseDataSource  {
 
         return liveData;
     }
+
+
+    /**
+     * 登录服务器接口
+
+     * @param jsonPostPoundList: 要修改的LiveData数据，同时View层（LoginActivity）监听LiveData的数据变更，从而更新UI
+     * @return
+     */
+    public MutableLiveData<Result<String>> postPoundList(String name, MutableLiveData<Result<String>> jsonPostPoundList, File file,String token) {
+        try {
+
+            Map<String, RequestBody> fileRequestBodyMap = new HashMap<>();
+
+            fileRequestBodyMap.put("name",RequestBody.create(MediaType.parse("multipart/form-data"),name));
+            fileRequestBodyMap.put("avatar",RequestBody.create(MediaType.parse("multipart/form-data"), file));
+
+            mSubscription = RetrofitManager.getApiService()
+                    .postPoundList(fileRequestBodyMap,token)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(new Action0() {
+                        @Override
+                        public void call() {
+                            jsonPostPoundList.postValue(Result.loading(""));
+                        }
+                    })
+                    .subscribe(data -> {
+                        jsonPostPoundList.postValue(Result.response(data));
+                    }, throwable -> {
+
+                        jsonPostPoundList.postValue(Result.error(throwable));
+                    });
+            return jsonPostPoundList;
+        } catch (Exception e) {
+            jsonPostPoundList.postValue(Result.error(e.getCause()));
+        }
+
+        return jsonPostPoundList;
+    }
+
+
 
     /**
      * 保存登录返回的token等 用户信息

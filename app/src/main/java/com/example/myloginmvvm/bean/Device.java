@@ -23,4 +23,7 @@ public class Device {
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
     }
+
+
+
 }

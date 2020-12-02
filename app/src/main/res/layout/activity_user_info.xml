@@ -32,7 +32,7 @@
                 android:layout_gravity="right|center_vertical"
                 android:layout_centerVertical="true"
                 android:clickable="true"
-                android:visibility="gone" />
+                />
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
