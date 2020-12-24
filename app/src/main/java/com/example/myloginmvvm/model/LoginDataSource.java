@@ -95,7 +95,7 @@ public class LoginDataSource extends BaseDataSource  {
             MultipartBody.Part filePart2 = MultipartBody.Part.createFormData("name", "an");//文本OK*/
 
             /*
-               Map<String, RequestBody> requestBodyMap = new HashMap<>();
+                Map<String, RequestBody> requestBodyMap = new HashMap<>();
 
                 RequestBody requestBody = RequestBody.create(MediaType.parse("image*//*"), file);
                 // 这里前面一部分是服务器要求传的key("file")，加上一个i,就可以动态设置key的长度

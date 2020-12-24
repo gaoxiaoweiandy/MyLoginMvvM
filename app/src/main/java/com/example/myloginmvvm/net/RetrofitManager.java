@@ -9,6 +9,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
@@ -68,6 +69,8 @@ public class RetrofitManager {
      * 初始化okthttpClient实例
      */
     private void initOkHttpClient() {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 //设置缓存文件路径，和文件大小
                 .cache(new Cache(new File(Environment.getExternalStorageDirectory() + "/okhttp_cache/"), 50 * 1024 * 1024))
@@ -75,15 +78,17 @@ public class RetrofitManager {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
+                .addInterceptor(loggingInterceptor)
                 .addInterceptor(new Interceptor() {
                     @Override
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request()
                                 .newBuilder()
                                 //.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                                .addHeader("Accept-Encoding", "gzip, deflate")
+
+                               /* .addHeader("Accept-Encoding", "gzip, deflate")
                                 .addHeader("Connection", "keep-alive")
-                                .addHeader("Accept", "*/*")
+                                (/
                                 /*  .addHeader("tokenId", "gaoxiaowei")*/
                                 .build();
                         return chain.proceed(request);
