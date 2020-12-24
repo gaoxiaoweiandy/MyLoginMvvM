@@ -5,11 +5,13 @@ import com.example.myloginmvvm.bean.JsonLoginData;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -53,7 +55,14 @@ public interface RetrofitApiService {
     @Multipart
     @POST("rescue/app/guardian/modifyGuardian")
     Observable<JsonDataCommon<String>> postPoundList(
-            @PartMap Map<String, RequestBody> fileParams,@Header("Authorization") String authorizatio
+            @Part MultipartBody.Part fileParams, @Part MultipartBody.Part fileParams2,@Header("Authorization") String authorizatio
+    );
+
+
+    @Multipart
+    @POST("rescue/app/guardian/modifyGuardian")
+    Observable<JsonDataCommon<String>> postPoundList(
+            @PartMap Map<String, RequestBody> requestBodyMap, @Header("Authorization") String authorizatio
     );
 
 

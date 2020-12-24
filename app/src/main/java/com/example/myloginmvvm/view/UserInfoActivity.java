@@ -228,7 +228,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoViewModel, ActivityUs
             return;
         }
         //拍照获得的照片文件“将要”保存的全路径，即包括文件名+后缀
-        captureFile = new File(rootFile, "temp.jpg");
+        captureFile = new File(rootFile, "temp2.jpg");
         //跳转到调用系统相机
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //判断版本 如果在Android7.0以上,使用FileProvider获取Uri
@@ -255,7 +255,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoViewModel, ActivityUs
      */
     private void cropPhoto(Uri uri) {
         //cropFile：裁剪后的小图的保存路径
-        cropFile = new File(rootFile, "avatar.jpg");
+        cropFile = new File(rootFile, "avatar2.jpg");
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
         intent.putExtra("crop", "true");

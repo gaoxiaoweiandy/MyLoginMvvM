@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -83,13 +84,25 @@ public class LoginDataSource extends BaseDataSource  {
     public MutableLiveData<Result<String>> postPoundList(String name, MutableLiveData<Result<String>> jsonPostPoundList, File file,String token) {
         try {
 
-            Map<String, RequestBody> fileRequestBodyMap = new HashMap<>();
 
-            fileRequestBodyMap.put("name",RequestBody.create(MediaType.parse("multipart/form-data"),name));
-            fileRequestBodyMap.put("avatar",RequestBody.create(MediaType.parse("multipart/form-data"), file));
+
+
+            RequestBody requestFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), file); //OK
+            //设置图片格式
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image*//*"), file); //ok
+            //设置一个file文件
+            MultipartBody.Part filePart = MultipartBody.Part.createFormData("avatar", file.getName(), requestFile1);//OK
+            MultipartBody.Part filePart2 = MultipartBody.Part.createFormData("name", "an");//文本OK*/
+
+            /*
+               Map<String, RequestBody> requestBodyMap = new HashMap<>();
+
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image*//*"), file);
+                // 这里前面一部分是服务器要求传的key("file")，加上一个i,就可以动态设置key的长度
+                requestBodyMap.put("avatar", requestBody);*/
 
             mSubscription = RetrofitManager.getApiService()
-                    .postPoundList(fileRequestBodyMap,token)
+                    .postPoundList(filePart,filePart2,token)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(new Action0() {
