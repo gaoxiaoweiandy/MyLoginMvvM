@@ -17,11 +17,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -32,6 +35,7 @@ import com.example.myloginmvvm.R;
 import com.example.myloginmvvm.bean.MyConstant;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.databinding.ActivityUserInfoBinding;
+import com.example.myloginmvvm.uploadprogress.UploadImageView;
 import com.example.myloginmvvm.utils.FileUtil;
 import com.example.myloginmvvm.utils.MyLogCat;
 import com.example.myloginmvvm.utils.RxjavaPermissionUtil;
@@ -57,6 +61,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoViewModel, ActivityUs
     private static final String IMAGE_FILE_NAME = "takePhotoUser.data";
     private String protectorPicFilePath;
     private Uri mTempFileUri;
+    private UploadImageView uploadImageView;
 
 
     /**
@@ -69,7 +74,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoViewModel, ActivityUs
     public void postAvatar(File file, String name) {
         User user = new User(this);
         String token = user.getUserToken();
-        mViewModel.postPoundList(name,file,token);
+        mViewModel.postPoundList(name,file,token,mHandler);
     }
 
 
@@ -106,6 +111,7 @@ public class UserInfoActivity extends BaseActivity<UserInfoViewModel, ActivityUs
     }
 
     private void initView() {
+        uploadImageView = this.findViewById(R.id.iv_image);
         setToolBar(mDataBinding.toolbar);
         mDataBinding.rlAvatar.setOnClickListener(UserInfoActivity.this);
         mDataBinding.eiAvatar.setOnClickListener(UserInfoActivity.this);
@@ -278,15 +284,22 @@ public class UserInfoActivity extends BaseActivity<UserInfoViewModel, ActivityUs
         switch (requestCode) {
             case REQUESTCODE_PICK:  //从相册里选择返回的图片
                 if (data != null)
-                    cropPhoto(data.getData());
+                {
+                    postAvatar(captureFile,"xiaowei");
+                }
                 break;
             case REQUESTCODE_CAMERA:// 拍照返回的图片
-                if (Build.VERSION.SDK_INT >= 24) {
+              /*  if (Build.VERSION.SDK_INT >= 24) {
                     //拍照返回后，contentUri对应的captureFile路径下就有了刚才拍照成功的照片，然后调用cropPhoto去裁剪它（contentUri下的照片）
                     Uri contentUri = FileProvider.getUriForFile(UserInfoActivity.this, getPackageName(), captureFile);
                     cropPhoto(contentUri);
                 } else {
                     cropPhoto(Uri.fromFile(captureFile));
+                }*/
+
+             //   if (data != null)
+                {
+                    postAvatar(captureFile,"xiaowei");
                 }
                 break;
             case REQUESTCODE_CUTTING://
@@ -346,4 +359,18 @@ public class UserInfoActivity extends BaseActivity<UserInfoViewModel, ActivityUs
 
         }
     }
+
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.arg1) {
+                case 1:
+                    if (msg.what > 0) {
+                        uploadImageView.updatePercent(msg.what);
+                    }
+                    break;
+            }
+        }
+    };
 }

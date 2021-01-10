@@ -1,12 +1,16 @@
 package com.example.myloginmvvm.model;
 import android.app.Application;
 import android.content.ContentValues;
+import android.os.Handler;
+
 import androidx.lifecycle.MutableLiveData;
 import com.example.myloginmvvm.bean.JsonDataCommon;
 import com.example.myloginmvvm.bean.JsonLoginData;
 import com.example.myloginmvvm.bean.Result;
 import com.example.myloginmvvm.bean.User;
 import com.example.myloginmvvm.net.RetrofitManager;
+import com.example.myloginmvvm.uploadprogress.DefaultProgressListener;
+import com.example.myloginmvvm.uploadprogress.UploadFileRequestBody;
 
 import java.io.File;
 import java.util.HashMap;
@@ -15,6 +19,7 @@ import java.util.Map;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
@@ -45,7 +50,8 @@ public class LoginDataSource extends BaseDataSource  {
      * @param liveData: 要修改的LiveData数据，同时View层（LoginActivity）监听LiveData的数据变更，从而更新UI
      * @return
      */
-    public MutableLiveData<Result<JsonLoginData>> login(String username, String password, MutableLiveData<Result<JsonLoginData>> liveData, Application app) {
+    public Subscription login(String username, String password, MutableLiveData<Result<JsonLoginData>> liveData, Application app) {
+        Subscription mSubscription = null;
         try {
             // TODO: handle loggedInUser authentication
             mSubscription = RetrofitManager.getApiService()
@@ -58,20 +64,20 @@ public class LoginDataSource extends BaseDataSource  {
                             liveData.postValue(Result.loading(""));
                         }
                     })
-                    .subscribe(data -> {
+                    .subscribe((JsonDataCommon<JsonLoginData> data) -> {
                         //保存用户数据在本地SharePreference
                         saveUserData(data.getData().getToken(),app);
                         liveData.postValue(Result.response(data));
-                    }, throwable -> {
+                    }, (Throwable throwable) -> {
 
                         liveData.postValue(Result.error(throwable));
                     });
-            return liveData;
+            return mSubscription;
         } catch (Exception e) {
             liveData.postValue(Result.error(e.getCause()));
         }
 
-        return liveData;
+        return mSubscription;
     }
 
 
@@ -81,10 +87,10 @@ public class LoginDataSource extends BaseDataSource  {
      * @param jsonPostPoundList: 要修改的LiveData数据，同时View层（LoginActivity）监听LiveData的数据变更，从而更新UI
      * @return
      */
-    public MutableLiveData<Result<String>> postPoundList(String name, MutableLiveData<Result<String>> jsonPostPoundList, File file,String token) {
+    public MutableLiveData<Result<String>> postPoundList(String name, MutableLiveData<Result<String>> jsonPostPoundList, File file, String token, Handler handler) {
         try {
 
-
+            Subscription mSubscription = null;
 
 
             RequestBody requestFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), file); //OK
@@ -92,7 +98,13 @@ public class LoginDataSource extends BaseDataSource  {
             RequestBody requestFile = RequestBody.create(MediaType.parse("image*//*"), file); //ok
             //设置一个file文件
             MultipartBody.Part filePart = MultipartBody.Part.createFormData("avatar", file.getName(), requestFile1);//OK
-            MultipartBody.Part filePart2 = MultipartBody.Part.createFormData("name", "an");//文本OK*/
+            MultipartBody.Part filePart2 = MultipartBody.Part.createFormData("name", name);//文本OK*/
+
+            //上传进度
+            //gxw-Map<String, RequestBody> requestBodyMap = new HashMap<>();
+            UploadFileRequestBody fileRequestBody = new UploadFileRequestBody(file, new DefaultProgressListener(handler,1));
+            MultipartBody.Part filePart3 = MultipartBody.Part.createFormData("avatar", file.getName(), fileRequestBody);//OK
+            //gxw- requestBodyMap.put("file\"; filename=\"" + file.getName(), fileRequestBody);
 
             /*
                 Map<String, RequestBody> requestBodyMap = new HashMap<>();
@@ -102,7 +114,7 @@ public class LoginDataSource extends BaseDataSource  {
                 requestBodyMap.put("avatar", requestBody);*/
 
             mSubscription = RetrofitManager.getApiService()
-                    .postPoundList(filePart,filePart2,token)
+                    .postPoundList(filePart3,filePart2,token)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(new Action0() {

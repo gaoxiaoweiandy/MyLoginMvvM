@@ -1,10 +1,15 @@
 package com.example.myloginmvvm.model;
 import android.app.Application;
+import android.os.Handler;
+
 import androidx.lifecycle.MutableLiveData;
 import com.example.myloginmvvm.bean.JsonLoginData;
 import com.example.myloginmvvm.bean.Result;
 
 import java.io.File;
+
+import rx.Subscriber;
+import rx.Subscription;
 
 /**
  * 可以将Repository和 DataSource这两者合并起来看作是MVVM中的Model层，实质最终获取服务起数据的是DataSource,
@@ -38,9 +43,9 @@ public class LoginRepository {
      * @param app：将Myapplication作为全局context,以防止内存泄露;切记不要传递Activity的this作为上下文。
      * @return
      */
-    public  MutableLiveData<Result<JsonLoginData>> login(String username, String password, MutableLiveData<Result<JsonLoginData>> jsonLoginLiveData, Application app) {
-        MutableLiveData<Result<JsonLoginData>> result = dataSource.login(username, password,jsonLoginLiveData, app);
-        return result;
+    public Subscription login(String username, String password, MutableLiveData<Result<JsonLoginData>> jsonLoginLiveData, Application app) {
+        Subscription subscriber= dataSource.login(username, password,jsonLoginLiveData, app);
+        return subscriber;
     }
 
 
@@ -49,8 +54,8 @@ public class LoginRepository {
      * @param name:
      * @return
      */
-    public  MutableLiveData<Result<String>> postBoundList(String name, MutableLiveData<Result<String>>jsonPostBoundList, File file,String token) {
-        MutableLiveData<Result<String>> result = dataSource.postPoundList(name,jsonPostBoundList,file,token);
+    public  MutableLiveData<Result<String>> postBoundList(String name, MutableLiveData<Result<String>>jsonPostBoundList, File file, String token, Handler handler) {
+        MutableLiveData<Result<String>> result = dataSource.postPoundList(name,jsonPostBoundList,file,token,handler);
         return result;
     }
 }

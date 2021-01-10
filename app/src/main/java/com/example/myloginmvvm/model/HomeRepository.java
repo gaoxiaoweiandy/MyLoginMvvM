@@ -3,6 +3,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.myloginmvvm.bean.JsonDeviceListData;
 import com.example.myloginmvvm.bean.Result;
 
+import rx.Subscription;
+
 /**
  * 可以将Repository和 DataSource这两者合并起来看作是MVVM中的Model层，实质最终获取服务起数据的是DataSource,
  * 这里引入Repository的目的是根据业务需求提前对服务器返回的数据进行加工处理（最终接近View层需要显示的数据结构），这样VM(ViewModel)层将会变得简洁，而DataSource
@@ -32,7 +34,7 @@ public class HomeRepository {
      * @param liveData: 要修改的LiveData数据，同时View层（HomeActivity）监听LiveData的数据变更，从而更新UI
      * @return
      */
-    public MutableLiveData<Result<JsonDeviceListData>> getMyDeviceList(String userName, String userToken, MutableLiveData<Result<JsonDeviceListData>> liveData) {
+    public Subscription getMyDeviceList(String userName, String userToken, MutableLiveData<Result<JsonDeviceListData>> liveData) {
         return dataSource.getMyDeviceList( userName ,userToken,liveData);
     }
 

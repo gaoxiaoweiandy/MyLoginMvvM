@@ -11,13 +11,13 @@ import rx.Subscription;
  */
 public class BaseDataSource implements LifecycleObserver {
     private  String TAG = BaseDataSource.class.getSimpleName() ;
-    protected Subscription mSubscription;
+  //  protected Subscription mSubscription;
 
 
-    /**
+  /*  *//**
      * 使用LifeCycle自动调用：即当Activity进入OnStop生命周期时，会被LifecycleObserver感知到
      * 从而自动调用unSubscription函数来释放资源
-     */
+     *//*
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void unSubscription()
     {
@@ -26,5 +26,5 @@ public class BaseDataSource implements LifecycleObserver {
             mSubscription.unsubscribe();
             Log.i(TAG,"AACunSubscription");
         }
-    }
+    }*/
 }

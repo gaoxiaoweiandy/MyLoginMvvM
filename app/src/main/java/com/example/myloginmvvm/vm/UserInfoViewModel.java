@@ -1,6 +1,7 @@
 package com.example.myloginmvvm.vm;
 
 import android.app.Application;
+import android.os.Handler;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
@@ -39,8 +40,8 @@ public class UserInfoViewModel extends ViewModel {
      * @param file：图片文件
      * @return
      */
-    public MutableLiveData<Result<String>> postPoundList(String name,File file,String token) {
-        jsonPostBoundList = loginRepository.postBoundList(name, jsonPostBoundList,file,token);
+    public MutableLiveData<Result<String>> postPoundList(String name, File file, String token, Handler handler) {
+        jsonPostBoundList = loginRepository.postBoundList(name, jsonPostBoundList,file,token,handler);
         return jsonPostBoundList;
     }
 }

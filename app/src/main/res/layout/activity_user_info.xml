@@ -109,6 +109,11 @@
                 android:layout_marginLeft="16dp"
                 android:background="@color/colorAccent" />
 
+            <com.example.myloginmvvm.uploadprogress.UploadImageView
+                android:layout_marginTop="10dp"
+                android:id="@+id/iv_image"
+                android:layout_width="300dp"
+                android:layout_height="250dp" />
 
         </LinearLayout>
 

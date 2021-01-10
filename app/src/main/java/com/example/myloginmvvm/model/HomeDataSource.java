@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.myloginmvvm.bean.JsonDeviceListData;
 import com.example.myloginmvvm.bean.Result;
 import com.example.myloginmvvm.net.RetrofitManager;
+
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
@@ -36,10 +38,11 @@ public class HomeDataSource extends BaseDataSource   {
      * @param liveData: 要修改的LiveData数据，同时View层（HomeActivity）监听LiveData的数据变更，从而更新UI
      * @return
      */
-    public MutableLiveData<Result<JsonDeviceListData>>getMyDeviceList(String userName, String userToken, MutableLiveData<Result<JsonDeviceListData>> liveData) {
+    public Subscription getMyDeviceList(String userName, String userToken, MutableLiveData<Result<JsonDeviceListData>> liveData) {
+        Subscription mSubscription = null;
         try {
             // TODO: handle loggedInUser authentication
-            mSubscription = RetrofitManager.getApiService()
+               mSubscription = RetrofitManager.getApiService()
                     .getMyDeviceList(userName,userToken)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -57,10 +60,10 @@ public class HomeDataSource extends BaseDataSource   {
                     }, throwable -> {
                         liveData.postValue(Result.error(throwable));
                     });
-            return liveData;
+            return mSubscription;
         } catch (Exception e) {
             liveData.postValue(Result.error(e.getCause()));
         }
-        return liveData;
+        return mSubscription;
     }
 }
